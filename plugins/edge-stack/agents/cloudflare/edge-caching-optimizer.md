@@ -1,7 +1,7 @@
 ---
 name: edge-caching-optimizer
 description: Deep expertise in edge caching optimization - Cache API patterns, cache hierarchies, invalidation strategies, stale-while-revalidate, CDN configuration, and cache performance tuning for Cloudflare Workers.
-model: haiku
+model: sonnet
 color: purple
 ---
 

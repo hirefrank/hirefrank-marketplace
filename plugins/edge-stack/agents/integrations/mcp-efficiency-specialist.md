@@ -75,6 +75,113 @@ Our edge-stack plugin bundles 8 MCP servers:
 
 ---
 
+## Advanced Tool Use Features (November 2025)
+
+Based on Anthropic's [Advanced Tool Use](https://www.anthropic.com/engineering/advanced-tool-use) announcement, three new capabilities enable even more efficient MCP workflows:
+
+### Feature 1: Tool Search with `defer_loading`
+
+**When to use**: When you have 10+ MCP tools available (we have 9 servers with many tools each).
+
+```typescript
+// Configure MCP tools with defer_loading for on-demand discovery
+// This achieves 85% token reduction while maintaining full tool access
+
+const toolConfig = {
+  // Always-loaded tools (3-5 critical ones)
+  cloudflare_search: { defer_loading: false }, // Critical for all Cloudflare work
+  package_registry: { defer_loading: false },  // Frequently needed
+
+  // Deferred tools (load on-demand via search)
+  shadcn_components: { defer_loading: true },  // Load when doing UI work
+  playwright_generate: { defer_loading: true }, // Load when testing
+  polar_billing: { defer_loading: true },       // Load when billing needed
+  tailwind_convert: { defer_loading: true },    // Load for styling tasks
+};
+
+// Benefits:
+// - 85% reduction in token usage
+// - Opus 4.5: 79.5% → 88.1% accuracy on MCP evaluations
+// - Compatible with prompt caching
+```
+
+**Configuration guidance**:
+- Keep 3-5 most-used tools always loaded (`defer_loading: false`)
+- Defer specialized tools for on-demand discovery
+- Add clear tool descriptions to improve search accuracy
+
+### Feature 2: Programmatic Tool Calling
+
+**When to use**: Complex workflows with 3+ dependent calls, large datasets, or parallel operations.
+
+```typescript
+// Enable code execution tool for orchestrated MCP calls
+// Achieves 37% context reduction on complex tasks
+
+// Example: Aggregate data from multiple MCP servers
+async function analyzeProjectStack() {
+  // Parallel fetch from multiple MCP servers
+  const [workers, components, packages] = await Promise.all([
+    cloudflare.listWorkers(),
+    shadcn.listComponents(),
+    packageRegistry.search("@tanstack")
+  ]);
+
+  // Process in execution environment (not in model context)
+  const analysis = {
+    workerCount: workers.length,
+    activeWorkers: workers.filter(w => w.status === 'active').length,
+    componentCount: components.length,
+    outdatedPackages: packages.filter(p => p.hasNewerVersion).length
+  };
+
+  // Only summary enters model context
+  return analysis;
+}
+
+// Result: 43,588 → 27,297 tokens (37% reduction)
+```
+
+### Feature 3: Tool Use Examples
+
+**When to use**: Complex parameter handling, domain-specific conventions, ambiguous tool usage.
+
+```typescript
+// Provide concrete examples alongside JSON Schema definitions
+// Improves accuracy from 72% to 90% on complex parameter handling
+
+const toolExamples = {
+  cloudflare_create_worker: [
+    // Full specification (complex deployment)
+    {
+      name: "api-gateway",
+      script: "export default { fetch() {...} }",
+      bindings: [
+        { type: "kv", name: "CACHE", namespace_id: "abc123" },
+        { type: "d1", name: "DB", database_id: "xyz789" }
+      ],
+      routes: ["api.example.com/*"],
+      compatibility_date: "2025-01-15"
+    },
+    // Minimal specification (simple worker)
+    {
+      name: "hello-world",
+      script: "export default { fetch() { return new Response('Hello') } }"
+    },
+    // Partial specification (with some bindings)
+    {
+      name: "data-processor",
+      script: "...",
+      bindings: [{ type: "r2", name: "BUCKET", bucket_name: "uploads" }]
+    }
+  ]
+};
+
+// Examples show: parameter correlations, format conventions, optional field patterns
+```
+
+---
+
 ## Core Patterns
 
 ### Pattern 1: Code Execution Instead of Direct Calls

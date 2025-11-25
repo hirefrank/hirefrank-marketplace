@@ -125,6 +125,79 @@ This SKILL automatically activates when:
 - **No Hover States**: Interactive components without hover feedback
 - **Inconsistent Patterns**: Same component with wildly different customizations
 
+### P1 - Critical (Distributional Convergence Anti-Patterns)
+
+**These patterns indicate generic "AI-generated" aesthetics and MUST be flagged:**
+
+#### Font Anti-Patterns (Auto-Detect)
+```tsx
+// ❌ CRITICAL: Generic fonts that dominate 80%+ of websites
+fontFamily: {
+  sans: ['Inter', ...]        // Flag: "Inter is overused - consider Space Grotesk, Plus Jakarta Sans"
+  sans: ['Roboto', ...]       // Flag: "Roboto is overused - consider IBM Plex Sans, Outfit"
+  sans: ['Open Sans', ...]    // Flag: "Open Sans is generic - consider Satoshi, General Sans"
+  sans: ['system-ui', ...]    // Flag: Only acceptable as fallback, not primary
+}
+
+// ❌ CRITICAL: Default Tailwind font classes without customization
+className="font-sans"         // Flag if font-sans maps to Inter/Roboto
+className="text-base"         // Flag: Generic sizing, consider custom scale
+```
+
+**Recommended Font Alternatives** (suggest these in reports):
+- **Body**: Space Grotesk, Plus Jakarta Sans, IBM Plex Sans, Outfit, Satoshi
+- **Headings**: Archivo Black, Cabinet Grotesk, Clash Display, General Sans
+- **Mono**: JetBrains Mono, Fira Code, Source Code Pro
+
+#### Color Anti-Patterns (Auto-Detect)
+```tsx
+// ❌ CRITICAL: Purple gradients (most common AI aesthetic)
+className="bg-gradient-to-r from-purple-500 to-purple-600"
+className="bg-gradient-to-r from-violet-500 to-purple-500"
+className="bg-purple-600"
+className="text-purple-500"
+
+// ❌ CRITICAL: Default gray backgrounds without brand treatment
+className="bg-gray-50"        // Flag: "Consider brand-tinted background"
+className="bg-white"          // Flag: "Consider atmospheric gradient or texture"
+className="bg-slate-100"      // Flag if used extensively without brand colors
+```
+
+**Recommended Color Approaches** (suggest these in reports):
+- Use CSS variables with brand palette (`--brand-primary`, `--brand-accent`)
+- Tint grays with brand color: `bg-brand-gray-50` instead of `bg-gray-50`
+- Gradients: Use brand colors, not default purple
+- Atmospheric: Layer gradients with subtle brand tints
+
+#### Animation Anti-Patterns (Auto-Detect)
+```tsx
+// ❌ CRITICAL: No transitions on interactive elements
+<Button>Click</Button>        // Flag: "Add transition-all duration-300"
+<Card>Content</Card>          // Flag: "Add hover:shadow-lg transition"
+
+// ❌ CRITICAL: Only basic hover without micro-interactions
+className="hover:bg-blue-600" // Flag: "Consider hover:scale-105 or hover:-translate-y-1"
+```
+
+**Detection Rules** (implement in validation):
+```typescript
+// Font detection
+const OVERUSED_FONTS = ['Inter', 'Roboto', 'Open Sans', 'Helvetica', 'Arial'];
+const hasBadFont = (config) => OVERUSED_FONTS.some(f =>
+  config.fontFamily?.sans?.includes(f)
+);
+
+// Purple gradient detection
+const PURPLE_PATTERN = /(?:purple|violet)-[4-6]00/;
+const hasPurpleGradient = (className) =>
+  className.includes('gradient') && PURPLE_PATTERN.test(className);
+
+// Missing animation detection
+const INTERACTIVE_COMPONENTS = ['Button', 'Card', 'Link', 'Input'];
+const hasNoTransition = (className) =>
+  !className.includes('transition') && !className.includes('animate');
+```
+
 ### P2 - Important (Design System Consistency)
 - **Random Spacing Values**: Not using Tailwind spacing scale (p-4, mt-6, etc.)
 - **Inconsistent Icon Sizing**: Icons with different sizes in similar contexts

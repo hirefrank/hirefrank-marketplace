@@ -1181,4 +1181,4 @@ npm run email:preview
 - Track email opens/clicks via Resend webhooks
 - Test with onboarding@resend.dev before using custom domain
 - Use batch API for newsletters to multiple recipients
-- See `agents/resend-email-specialist` for detailed guidance
+- See `agents/integrations/resend-email-specialist` for detailed guidance

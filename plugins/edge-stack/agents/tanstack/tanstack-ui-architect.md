@@ -1,7 +1,7 @@
 ---
 name: tanstack-ui-architect
 description: Deep expertise in shadcn/ui and Radix UI primitives for Tanstack Start projects. Validates component selection, prop usage, and customization patterns. Prevents prop hallucination through MCP integration. Ensures design system consistency.
-model: haiku
+model: sonnet
 color: blue
 ---
 

@@ -298,24 +298,82 @@ Run the Task code-simplicity-reviewer() to see if we can simplify the code.
 <thinking>
 Consolidate all agent reports into a categorized list of findings.
 Remove duplicates, prioritize by severity and impact.
+Apply confidence scoring to filter false positives.
 </thinking>
 
 <synthesis_tasks>
 - [ ] Collect findings from all parallel agents
 - [ ] Categorize by type: security, performance, architecture, quality, etc.
+- [ ] **Apply confidence scoring (0-100) to each finding**
+- [ ] **Filter out findings below 80 confidence threshold**
 - [ ] Assign severity levels: 🔴 CRITICAL (P1), 🟡 IMPORTANT (P2), 🔵 NICE-TO-HAVE (P3)
 - [ ] Remove duplicate or overlapping findings
 - [ ] Estimate effort for each finding (Small/Medium/Large)
 </synthesis_tasks>
 
+#### Confidence Scoring System (Adopted from Anthropic's code-review plugin)
+
+Each finding receives an independent confidence score:
+
+| Score | Meaning | Action |
+|-------|---------|--------|
+| **0-25** | Not confident; likely false positive | Auto-filter (don't show) |
+| **26-50** | Somewhat confident; might be valid | Auto-filter (don't show) |
+| **51-79** | Moderately confident; real but uncertain | Auto-filter (don't show) |
+| **80-89** | Highly confident; real and important | ✅ Show to user |
+| **90-100** | Absolutely certain; definitely real | ✅ Show to user (prioritize) |
+
+**Confidence Threshold: 80** - Only findings scoring 80+ are surfaced to the user.
+
+<confidence_criteria>
+When scoring a finding, consider:
+
+1. **Evidence Quality** (+20 points each):
+   - [ ] Specific file and line number identified
+   - [ ] Code snippet demonstrates the issue
+   - [ ] Issue is in changed code (not pre-existing)
+   - [ ] Clear violation of documented standard
+
+2. **False Positive Indicators** (-20 points each):
+   - [ ] Issue exists in unchanged code
+   - [ ] Would be caught by linter/type checker
+   - [ ] Has explicit ignore comment
+   - [ ] Is a style preference, not a bug
+
+3. **Verification** (+10 points each):
+   - [ ] Multiple agents flagged same issue
+   - [ ] CLAUDE.md or PREFERENCES.md mentions this pattern
+   - [ ] Issue matches known Cloudflare anti-pattern
+
+Example scoring:
+```
+Finding: Using process.env in Worker
+- Specific location: src/index.ts:45 (+20)
+- Code snippet shows violation (+20)
+- In changed code (+20)
+- Violates Workers runtime rules (+20)
+- Multiple agents flagged (+10)
+= 90 confidence ✅ SHOW
+```
+
+```
+Finding: Consider adding more comments
+- No specific location (-20)
+- Style preference (-20)
+- Not in PREFERENCES.md (-10)
+= 30 confidence ❌ FILTER
+```
+</confidence_criteria>
+
 #### Step 2: Present Findings for Triage
 
-For EACH finding, present in this format:
+For EACH finding (with confidence ≥80), present in this format:
 
 ```
 ---
 Finding #X: [Brief Title]
 
+Confidence: [Score]/100 ✅
 Severity: 🔴 P1 / 🟡 P2 / 🔵 P3
 
 Category: [Security/Performance/Architecture/Quality/etc.]
@@ -336,12 +394,17 @@ Proposed Solution:
 
 Effort: Small/Medium/Large
 
+Evidence:
+- [Why confidence is high - specific indicators]
+
 ---
 Do you want to add this to the todo list?
 1. yes - create todo file
 2. next - skip this finding
 3. custom - modify before creating
 ```
+
+**Note**: Findings with confidence <80 are automatically filtered and not shown.
 
 #### Step 3: Create Todo Files for Approved Findings
 
@@ -443,17 +506,28 @@ After processing all findings:
 ## Code Review Complete
 
 **Review Target:** [PR number or branch]
-**Total Findings:** [X]
-**Todos Created:** [Y]
+**Total Findings:** [X] (from all agents)
+**High-Confidence (≥80):** [Y] (shown to user)
+**Filtered (<80):** [Z] (auto-removed as likely false positives)
+**Todos Created:** [W]
+
+### Confidence Distribution:
+- 90-100 (certain): [count]
+- 80-89 (confident): [count]
+- <80 (filtered): [count]
 
 ### Created Todos:
-- `{issue_id}-pending-p1-{description}.md` - {title}
-- `{issue_id}-pending-p2-{description}.md` - {title}
+- `{issue_id}-pending-p1-{description}.md` - {title} (confidence: 95)
+- `{issue_id}-pending-p2-{description}.md` - {title} (confidence: 85)
 ...
 
-### Skipped Findings:
+### Skipped Findings (User Choice):
 - [Finding #Z]: {reason}
 ...
+
+### Auto-Filtered (Low Confidence):
+- [X] findings filtered with confidence <80
+- Run with `--show-all` flag to see filtered findings
 
 ### Next Steps:
 1. Triage pending todos: `ls todos/*-pending-*.md`

@@ -1,17 +1,46 @@
 {
-  "lastRun": "2025-11-14T12:30:00Z",
-  "lastReviewDate": "2025-11-14",
-  "nextScheduledRun": "2025-12-14",
-  "totalRuns": 1,
+  "lastRun": "2025-11-25T12:00:00Z",
+  "lastReviewDate": "2025-11-25",
+  "nextScheduledRun": "2025-12-25",
+  "totalRuns": 2,
   "commitsAnalyzed": {
-    "2025-11-14": 6
+    "2025-11-14": 6,
+    "2025-11-25": 16
   },
   "lastProcessedCommits": [
+    "364b3f5d65ee5dfaf1fd46848b4077da0416057e",
+    "39e41f433255f754ea17d8bffbaa40931704201b",
+    "be1e9572193349c5e1159f3c44e2aec6ff11b04e",
+    "bf00391d426615b160d4438b95a6a11fdc126231",
+    "66e35bbc40780c95f2ce2d1580f9c12754cda64f",
+    "e3e7640c64777669d074ee17c143e505e23cbc94",
+    "a1cc81ce33ee1b0d902c9cbf9e809445219ec983",
+    "bd4a659f35b96da32b57df65a38aec57adeeaca2",
+    "5a7bcc5afba97a00b71e5fdf2321da4708b8d7df",
+    "bd2a19dc95a0f76240dfa6af28059247d3167c94",
+    "6a9188da6ef826affd0814536e13dd11b8f3497c",
+    "e262127d3ab9dc3557ec71f525ffb2257eab3f79",
+    "8cc99ab483f28cb5abcab9388995931828e92fb0",
+    "8cd694c518e8bbe466aede63489d68214a794c8d",
+    "d44804fc39d60bb7914d971cc90bdb98e3b3e710",
+    "15e07637d54d8c5a5c0a460f9211855eb3f3e8ca",
     "4e2a828117385649470ab5208452f439f850d8bb",
     "a230b2b791333dd15e19c61112a15a9e8610ee58",
     "b1284a226c938b818f38296175d0f87744d01ea4",
     "4d6632037a56b699e20665cf8138a0aa622c2321",
     "daf3afc997d54fe707b34aa9d836360f6da0a121",
     "b87934c4ebf7ee8399e9c7662ccf2cc4d967102c"
-  ]
+  ],
+  "reviewSummary": {
+    "2025-11-25": {
+      "period": "2025-11-14 to 2025-11-25",
+      "totalCommits": 16,
+      "toAdopt": 1,
+      "toAdapt": 5,
+      "toIgnore": 10,
+      "highPriority": ["Context7 MCP Server", "Playwright docs enhancement"],
+      "mediumPriority": ["Design iterator improvements", "Agent directory reorganization", "Gemini imagegen (Node.js)"],
+      "upstreamVersion": "v2.4.1"
+    }
+  }
 }

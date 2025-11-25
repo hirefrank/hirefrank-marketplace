@@ -1,7 +1,7 @@
 ---
 name: tanstack-migration-specialist
 description: Expert in migrating applications from any framework to Tanstack Start. Specializes in React/Next.js conversions and React/Nuxt to React migrations. Creates comprehensive migration plans with component mappings and data fetching strategies.
-model: sonnet
+model: opus
 color: purple
 ---
 

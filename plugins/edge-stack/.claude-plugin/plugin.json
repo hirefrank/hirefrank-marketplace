@@ -1,7 +1,7 @@
 {
   "name": "edge-stack",
-  "version": "3.0.0",
-  "description": "Complete full-stack development toolkit optimized for edge computing. Build modern web applications with Tanstack Start (React), Cloudflare Workers, Polar.sh billing, better-auth authentication, and shadcn/ui design system. Features 27 specialized agents, 12 autonomous SKILLs, 24 workflow commands, and 8 bundled MCP servers.",
+  "version": "3.1.0",
+  "description": "Complete full-stack development toolkit optimized for edge computing. Build modern web applications with Tanstack Start (React), Cloudflare Workers, Polar.sh billing, better-auth authentication, and shadcn/ui design system. Features 27 specialized agents (optimized for Opus 4.5), 13 autonomous SKILLs, 24 workflow commands, and 9 bundled MCP servers.",
   "author": {
     "name": "Frank Harris",
     "email": "frank@hirefrank.com"
@@ -26,5 +26,78 @@
     "mcp",
     "ai-powered",
     "workflow-automation"
-  ]
+  ],
+
+  "hooks": {
+    "_comment": "Safety hooks inspired by Anthropic's hookify plugin. Patterns prevent destructive operations and sensitive data exposure.",
+
+    "PreToolUse": [
+      {
+        "event": "Bash",
+        "description": "Block destructive git commands",
+        "conditions": [
+          { "field": "command", "operator": "regex_match", "pattern": "git\\s+(push\\s+--force|reset\\s+--hard|clean\\s+-fd)" }
+        ],
+        "action": "block",
+        "message": "Destructive git command blocked. Use standard git operations or explicitly request force operations."
+      },
+      {
+        "event": "Bash",
+        "description": "Warn on rm -rf commands",
+        "conditions": [
+          { "field": "command", "operator": "regex_match", "pattern": "rm\\s+-rf?\\s+(/|~|\\$HOME|\\.\\.)" }
+        ],
+        "action": "block",
+        "message": "Dangerous rm command blocked. Specify exact paths, not root/home directories."
+      },
+      {
+        "event": "Bash",
+        "description": "Warn on wrangler delete operations",
+        "conditions": [
+          { "field": "command", "operator": "contains", "pattern": "wrangler delete" }
+        ],
+        "action": "warn",
+        "message": "About to delete Cloudflare resource. Confirm this is intentional."
+      },
+      {
+        "event": "Bash",
+        "description": "Warn on production deployments",
+        "conditions": [
+          { "field": "command", "operator": "regex_match", "pattern": "wrangler\\s+(deploy|publish)(?!.*--env\\s+(dev|staging|preview))" }
+        ],
+        "action": "warn",
+        "message": "Deploying to production. Consider using --env staging first."
+      },
+      {
+        "event": "Write",
+        "description": "Block writing to sensitive files",
+        "conditions": [
+          { "field": "file_path", "operator": "regex_match", "pattern": "\\.(env|env\\.local|env\\.production)$" }
+        ],
+        "action": "warn",
+        "message": "Writing to environment file. Ensure no secrets are being committed."
+      },
+      {
+        "event": "Write",
+        "description": "Block writing secrets to code files",
+        "conditions": [
+          { "field": "content", "operator": "regex_match", "pattern": "(api[_-]?key|secret|password|token)\\s*[=:]\\s*['\"][^'\"]{20,}['\"]" }
+        ],
+        "action": "block",
+        "message": "Potential secret detected in file content. Use environment variables or wrangler secrets instead."
+      }
+    ],
+
+    "Stop": [
+      {
+        "event": "Stop",
+        "description": "Warn if stopping with incomplete todos",
+        "conditions": [
+          { "field": "has_incomplete_todos", "operator": "equals", "pattern": "true" }
+        ],
+        "action": "warn",
+        "message": "There are incomplete todos. Are you sure you want to stop?"
+      }
+    ]
+  }
 }

@@ -1,7 +1,7 @@
 ---
 name: better-auth-specialist
 description: Expert in authentication for Cloudflare Workers using better-auth. Handles OAuth providers, passkeys, magic links, session management, and security best practices for Tanstack Start (React) applications. Uses better-auth MCP for real-time configuration validation.
-model: haiku
+model: sonnet
 color: purple
 ---
 

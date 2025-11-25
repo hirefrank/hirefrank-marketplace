@@ -539,4 +539,4 @@ console.log("4. Deploy to production with: /es-deploy");
 - Test webhooks locally with Polar's test event feature
 - Store POLAR_ACCESS_TOKEN as Cloudflare secret (not in wrangler.toml)
 - Webhook endpoint must be publicly accessible (use ngrok for local testing)
-- See `agents/polar-billing-specialist` for detailed implementation guidance
+- See `agents/integrations/polar-billing-specialist` for detailed implementation guidance

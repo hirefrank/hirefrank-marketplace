@@ -13,8 +13,8 @@ Build modern web applications with **Tanstack Start** (React), Cloudflare Worker
 ## Overview
 
 This plugin transforms Claude Code into a complete edge-first full-stack development platform through:
-- **27 specialized agents** ([browse all](agents/)) - 16 Cloudflare + 7 Tanstack + 4 Integration, all with MCP integration
-- **12 autonomous SKILLs** ([browse all](skills/)) - 7 Cloudflare + 3 Frontend Design + 2 Security
+- **27 specialized agents** ([browse all](agents/)) - 12 Cloudflare + 5 Tanstack + 6 Integration + 3 Workflow + 1 Research, all with MCP integration
+- **13 autonomous SKILLs** ([browse all](skills/)) - 7 Cloudflare + 4 Frontend Design + 2 Security
 - **24 workflow commands** ([browse all](commands/)) - Setup wizards, migration tools, test generation, and automation
 - **Self-improvement** through feedback codification
 - **Multi-phase parallel execution**
@@ -24,7 +24,7 @@ This plugin transforms Claude Code into a complete edge-first full-stack develop
 
 ## 🚀 MCP Server Integration (Automatically Bundled)
 
-**NEW**: MCP servers are now bundled with the plugin! When you install this plugin, 8 MCP servers are automatically configured (7 active by default, 1 optional):
+**NEW**: MCP servers are now bundled with the plugin! When you install this plugin, 9 MCP servers are automatically configured (8 active by default, 1 optional):
 
 **Active by default**:
 - **Cloudflare MCP** (`https://docs.mcp.cloudflare.com/mcp`) - Documentation search, bindings management, and account context
@@ -34,11 +34,12 @@ This plugin transforms Claude Code into a complete edge-first full-stack develop
 - **Package Registry MCP** (`npx -y package-registry-mcp`) - Search NPM, Cargo, PyPI, and NuGet for up-to-date package information
 - **TanStack Router MCP** (`https://gitmcp.io/TanStack/router`) - TanStack Router documentation for type-safe routing patterns
 - **Tailwind CSS MCP** (`npx -y tailwindcss-mcp-server`) - Tailwind utilities, CSS-to-Tailwind conversion, and component templates
+- **Context7 MCP** (`npx -y @context7/mcp`) - Instant documentation lookup for 100+ frameworks (React, Next.js, Vue, Django, Laravel, etc.)
 
 **Optional (requires authentication)**:
 - **Polar MCP** (`https://mcp.polar.sh/mcp/polar-mcp`) - Billing integration and subscription management (disabled by default, enable via `/mcp` when needed)
 
-**No manual configuration needed!** Just install the plugin and the 7 core MCP servers work immediately.
+**No manual configuration needed!** Just install the plugin and the 8 core MCP servers work immediately.
 
 ### What MCP Provides
 
@@ -47,17 +48,19 @@ This plugin transforms Claude Code into a complete edge-first full-stack develop
 - "Install @tanstack/react-router package"
 - "Button component probably has these props..."
 - "Use bg-blue-500 for blue background"
+- "Check the React documentation for hooks..."
 
 **With MCP**: Agents use your real account and validated docs
 - "You already have a CACHE KV namespace (ID: abc123). Reuse it?"
 - "Package @tanstack/react-router@1.75.2 is available (published 2 days ago, 500K weekly downloads)"
 - "shadcn/ui Button props (validated): `variant`, `size`, `asChild`, `className`"
 - "Tailwind utility: `bg-blue-500` → Use `bg-sky-500` for better accessibility (WCAG AA compliant)"
+- "React 19 useOptimistic hook documentation (via Context7): handles optimistic UI updates..."
 
 **Benefits**:
 - ✅ **98.7% token reduction** (via execution environment filtering)
 - ✅ **Real-time account data** (bindings, metrics, security events)
-- ✅ **Accurate documentation** (always latest from Cloudflare, shadcn/ui, shadcn/ui)
+- ✅ **Accurate documentation** (always latest from Cloudflare, shadcn/ui, TanStack, React, and 100+ frameworks)
 - ✅ **No hallucinations** (component props validated from official sources)
 - ✅ **Data-driven recommendations** (based on your actual usage)
 
@@ -73,21 +76,41 @@ The plugin includes a `.mcp.json` file that automatically configures these serve
       "url": "https://docs.mcp.cloudflare.com/mcp",
       "enabled": true
     },
-    "shadcn-ui": {
-      "type": "sse",
+    "shadcn": {
       "command": "npx",
-      "args": ["-y", "mcp-remote", "https://www.shadcn.io/api/mcp"],
-      "enabled": true
-    },
-    "shadcn-ui": {
-      "type": "sse",
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "https://www.shadcn.io/api/mcp"],
+      "args": ["shadcn@latest", "mcp"],
       "enabled": true
     },
     "better-auth": {
       "type": "http",
       "url": "https://mcp.chonkie.ai/better-auth/better-auth-builder/mcp",
+      "enabled": true
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"],
+      "enabled": true
+    },
+    "package-registry": {
+      "command": "npx",
+      "args": ["-y", "package-registry-mcp"],
+      "enabled": true
+    },
+    "tanstack-router": {
+      "type": "sse",
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://gitmcp.io/TanStack/router"],
+      "enabled": true
+    },
+    "tailwindcss": {
+      "command": "npx",
+      "args": ["-y", "tailwindcss-mcp-server"],
+      "enabled": true
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@context7/mcp"],
+      "type": "stdio",
       "enabled": true
     },
     "polar": {
@@ -106,8 +129,13 @@ The plugin includes a `.mcp.json` file that automatically configures these serve
 
 # You should see:
 # ✓ cloudflare-docs (active)
-# ✓ shadcn-ui (active)
+# ✓ shadcn (active)
 # ✓ better-auth (active)
+# ✓ playwright (active)
+# ✓ package-registry (active)
+# ✓ tanstack-router (active)
+# ✓ tailwindcss (active)
+# ✓ context7 (active)
 # ⚠ polar (disabled - requires authentication)
 ```
 
@@ -118,6 +146,13 @@ The plugin includes a `.mcp.json` file that automatically configures these serve
 3. **Use billing features**: Run `/es-billing-setup` for guided integration
 
 **MCP Server Features**:
+
+**Framework Documentation** - `context7` MCP provides:
+- Instant documentation lookup for 100+ frameworks and libraries
+- Tools: `resolve-library-id`, `get-library-docs`
+- Supports: React, TanStack Router, Next.js, Vue, Svelte, Angular, Django, Laravel, FastAPI, Express, and many more
+- Always up-to-date documentation from official sources
+- Perfect for cross-framework development and migration projects
 
 **Frontend Design** - `shadcn-ui` MCP provides:
 - `frontend-design-specialist` agent - Validates component customizations
@@ -243,46 +278,48 @@ All 24 commands are organized by functional area. [Browse all commands →](comm
 
 ## Agents
 
-All 27 agents include MCP integration for real-time account context and documentation validation. [Browse all agents →](agents/)
+All 27 agents include MCP integration for real-time account context and documentation validation. Agents are now organized into categorized subdirectories for easier navigation. [Browse all agents →](agents/)
 
-### Core Cloudflare (10)
-- **[`workers-runtime-guardian`](agents/workers-runtime-guardian.md)** - Ensures Workers runtime compatibility (V8, not Node.js)
-- **[`binding-context-analyzer`](agents/binding-context-analyzer.md)** - Parses wrangler.toml, generates TypeScript Env interface
-- **[`durable-objects-architect`](agents/durable-objects-architect.md)** - DO lifecycle, state persistence, WebSocket patterns
-- **[`cloudflare-architecture-strategist`](agents/cloudflare-architecture-strategist.md)** - Workers/DO/KV/R2 architecture decisions
-- **[`cloudflare-security-sentinel`](agents/cloudflare-security-sentinel.md)** - Security model, secret management, CORS/CSP
-- **[`edge-performance-oracle`](agents/edge-performance-oracle.md)** - Cold start optimization, edge caching strategies
-- **[`cloudflare-pattern-specialist`](agents/cloudflare-pattern-specialist.md)** - Cloudflare-specific patterns and anti-patterns
-- **[`cloudflare-data-guardian`](agents/cloudflare-data-guardian.md)** - KV/D1/R2 data integrity and consistency models
-- **[`kv-optimization-specialist`](agents/kv-optimization-specialist.md)** - TTL strategies, key naming, batch operations
-- **[`r2-storage-architect`](agents/r2-storage-architect.md)** - Upload patterns, streaming, CDN integration
+### Cloudflare (12) - [Browse →](agents/cloudflare/)
+- **[`workers-runtime-guardian`](agents/cloudflare/workers-runtime-guardian.md)** - Ensures Workers runtime compatibility (V8, not Node.js)
+- **[`cloudflare-architecture-strategist`](agents/cloudflare/cloudflare-architecture-strategist.md)** - Workers/DO/KV/R2 architecture decisions
+- **[`cloudflare-security-sentinel`](agents/cloudflare/cloudflare-security-sentinel.md)** - Security model, secret management, CORS/CSP
+- **[`cloudflare-pattern-specialist`](agents/cloudflare/cloudflare-pattern-specialist.md)** - Cloudflare-specific patterns and anti-patterns
+- **[`cloudflare-data-guardian`](agents/cloudflare/cloudflare-data-guardian.md)** - KV/D1/R2 data integrity and consistency models
+- **[`binding-context-analyzer`](agents/cloudflare/binding-context-analyzer.md)** - Parses wrangler.toml, generates TypeScript Env interface
+- **[`durable-objects-architect`](agents/cloudflare/durable-objects-architect.md)** - DO lifecycle, state persistence, WebSocket patterns
+- **[`edge-performance-oracle`](agents/cloudflare/edge-performance-oracle.md)** - Cold start optimization, edge caching strategies
+- **[`edge-caching-optimizer`](agents/cloudflare/edge-caching-optimizer.md)** - Cache hierarchy, invalidation strategies
+- **[`kv-optimization-specialist`](agents/cloudflare/kv-optimization-specialist.md)** - TTL strategies, key naming, batch operations
+- **[`r2-storage-architect`](agents/cloudflare/r2-storage-architect.md)** - Upload patterns, streaming, CDN integration
+- **[`workers-ai-specialist`](agents/cloudflare/workers-ai-specialist.md)** - Vercel AI SDK, Cloudflare AI Agents, RAG patterns
 
-### Tanstack Start (7)
-- **[`tanstack-migration-specialist`](agents/tanstack-migration-specialist.md)** - Migrate React apps to Tanstack Start
-- **[`tanstack-routing-specialist`](agents/tanstack-routing-specialist.md)** - File-based routing, loaders, type-safe navigation
-- **[`tanstack-ssr-specialist`](agents/tanstack-ssr-specialist.md)** - Server-side rendering, React Server Functions
-- **[`tanstack-ui-architect`](agents/tanstack-ui-architect.md)** - shadcn/ui + TanStack integration patterns
-- **[`frontend-design-specialist`](agents/frontend-design-specialist.md)** - Prevents generic aesthetics, distinctive design patterns
-- **[`mcp-efficiency-specialist`](agents/mcp-efficiency-specialist.md)** - MCP integration patterns and best practices
-- **[`accessibility-guardian`](agents/accessibility-guardian.md)** - WCAG 2.1 AA compliance, keyboard navigation, screen readers
+### Tanstack (5) - [Browse →](agents/tanstack/)
+- **[`tanstack-ui-architect`](agents/tanstack/tanstack-ui-architect.md)** - shadcn/ui + TanStack integration patterns
+- **[`tanstack-routing-specialist`](agents/tanstack/tanstack-routing-specialist.md)** - File-based routing, loaders, type-safe navigation
+- **[`tanstack-ssr-specialist`](agents/tanstack/tanstack-ssr-specialist.md)** - Server-side rendering, React Server Functions
+- **[`tanstack-migration-specialist`](agents/tanstack/tanstack-migration-specialist.md)** - Migrate React apps to Tanstack Start
+- **[`frontend-design-specialist`](agents/tanstack/frontend-design-specialist.md)** - Prevents generic aesthetics, distinctive design patterns
 
-### Integration Specialists (6)
-- **[`better-auth-specialist`](agents/better-auth-specialist.md)** - OAuth, passkeys, magic links, session management
-- **[`polar-billing-specialist`](agents/polar-billing-specialist.md)** - Subscriptions, webhooks, customer lifecycle
-- **[`resend-email-specialist`](agents/resend-email-specialist.md)** - Transactional email, templates, deliverability
-- **[`playwright-testing-specialist`](agents/playwright-testing-specialist.md)** - E2E testing, Workers bindings, accessibility tests
-- **[`workers-ai-specialist`](agents/workers-ai-specialist.md)** - Vercel AI SDK, Cloudflare AI Agents, RAG patterns
-- **[`edge-caching-optimizer`](agents/edge-caching-optimizer.md)** - Cache hierarchy, invalidation strategies
+### Integrations (6) - [Browse →](agents/integrations/)
+- **[`polar-billing-specialist`](agents/integrations/polar-billing-specialist.md)** - Subscriptions, webhooks, customer lifecycle
+- **[`better-auth-specialist`](agents/integrations/better-auth-specialist.md)** - OAuth, passkeys, magic links, session management
+- **[`resend-email-specialist`](agents/integrations/resend-email-specialist.md)** - Transactional email, templates, deliverability
+- **[`playwright-testing-specialist`](agents/integrations/playwright-testing-specialist.md)** - E2E testing, Workers bindings, accessibility tests
+- **[`mcp-efficiency-specialist`](agents/integrations/mcp-efficiency-specialist.md)** - MCP integration patterns and best practices
+- **[`accessibility-guardian`](agents/integrations/accessibility-guardian.md)** - WCAG 2.1 AA compliance, keyboard navigation, screen readers
 
-### Meta-Learning & Analysis (4)
-- **[`feedback-codifier`](agents/feedback-codifier.md)** - Analyzes user corrections, extracts patterns, updates agents
-- **[`git-history-analyzer`](agents/git-history-analyzer.md)** - Commit history analysis, pattern identification
-- **[`repo-research-analyst`](agents/repo-research-analyst.md)** - Codebase pattern research, convention identification
-- **[`code-simplicity-reviewer`](agents/code-simplicity-reviewer.md)** - YAGNI enforcement, complexity reduction
+### Workflow (3) - [Browse →](agents/workflow/)
+- **[`feedback-codifier`](agents/workflow/feedback-codifier.md)** - Analyzes user corrections, extracts patterns, updates agents
+- **[`code-simplicity-reviewer`](agents/workflow/code-simplicity-reviewer.md)** - YAGNI enforcement, complexity reduction
+- **[`repo-research-analyst`](agents/workflow/repo-research-analyst.md)** - Codebase pattern research, convention identification
+
+### Research (1) - [Browse →](agents/research/)
+- **[`git-history-analyzer`](agents/research/git-history-analyzer.md)** - Commit history analysis, pattern identification
 
 ## Skills
 
-All 12 autonomous SKILLs provide real-time validation and guidance during development. [Browse all skills →](skills/)
+All 13 autonomous SKILLs provide real-time validation and guidance during development. [Browse all skills →](skills/)
 
 ### Cloudflare Validation (4)
 - **[`workers-runtime-validator`](skills/workers-runtime-validator/)** - Auto-validates Workers runtime compatibility (forbidden APIs, env patterns)
@@ -294,10 +331,11 @@ All 12 autonomous SKILLs provide real-time validation and guidance during develo
 - **[`kv-optimization-advisor`](skills/kv-optimization-advisor/)** - Auto-suggests TTL strategies, key naming, batch operations
 - **[`cors-configuration-validator`](skills/cors-configuration-validator/)** - Auto-validates CORS headers, preflight handling
 
-### Frontend Design (3)
+### Frontend Design (4)
 - **[`shadcn-ui-design-validator`](skills/shadcn-ui-design-validator/)** - Auto-validates component usage, prevents prop hallucination via MCP
 - **[`component-aesthetic-checker`](skills/component-aesthetic-checker/)** - Auto-detects generic patterns (Inter fonts, purple gradients)
 - **[`animation-interaction-validator`](skills/animation-interaction-validator/)** - Auto-ensures engaging UX (transitions, hover states, loading feedback)
+- **[`gemini-imagegen`](skills/gemini-imagegen/)** - AI image generation with Gemini API (generate, edit, compose)
 
 ### Integration & Security (3)
 - **[`auth-security-validator`](skills/auth-security-validator/)** - Auto-validates better-auth patterns, session security, CSRF protection
@@ -516,10 +554,15 @@ See [LICENSE](./LICENSE) for full details.
 
 ## Resources
 
-**MCP Servers** (4 bundled with plugin):
+**MCP Servers** (9 bundled with plugin):
 - [Cloudflare MCP](https://docs.mcp.cloudflare.com/mcp) - Account context + documentation
 - [shadcn/ui MCP](https://www.shadcn.io/api/mcp) - Component documentation
 - [better-auth MCP](https://mcp.chonkie.ai/better-auth/better-auth-builder/mcp) - Authentication patterns
+- [Playwright MCP](https://github.com/microsoft/playwright-mcp) - Browser automation and E2E testing
+- [Package Registry MCP](https://github.com/zcaceres/package-registry-mcp) - NPM, Cargo, PyPI, NuGet search
+- [TanStack Router MCP](https://gitmcp.io/TanStack/router) - TanStack Router documentation
+- [Tailwind CSS MCP](https://github.com/modelcontextprotocol/servers/tree/main/src/tailwindcss) - Tailwind utilities and templates
+- [Context7 MCP](https://context7.com) - Instant documentation for 100+ frameworks
 - [Polar MCP](https://mcp.polar.sh/mcp/polar-mcp) - Billing integration
 - [MCP Usage Examples](./docs/mcp-usage-examples.md) - Query patterns and workflows
 - [MCP Protocol](https://modelcontextprotocol.io) - Official MCP specification

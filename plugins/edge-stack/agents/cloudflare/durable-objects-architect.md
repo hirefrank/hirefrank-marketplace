@@ -1,6 +1,6 @@
 ---
 name: durable-objects-architect
-model: sonnet
+model: opus
 color: purple
 ---
 

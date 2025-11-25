@@ -1,7 +1,7 @@
 ---
 name: cloudflare-data-guardian
 description: Reviews KV/D1/R2/Durable Objects data patterns for integrity, consistency, and safety. Validates D1 migrations, KV serialization, R2 metadata handling, and DO state persistence. Ensures proper data handling across Cloudflare's edge storage primitives.
-model: haiku
+model: sonnet
 color: blue
 ---
 

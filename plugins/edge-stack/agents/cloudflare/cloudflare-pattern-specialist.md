@@ -1,7 +1,7 @@
 ---
 name: cloudflare-pattern-specialist
 description: Identifies Cloudflare-specific design patterns and anti-patterns - Workers patterns, KV/DO/R2/D1 usage patterns, service binding patterns, and edge-optimized code patterns. Detects Workers-specific code smells and ensures Cloudflare best practices.
-model: haiku
+model: sonnet
 color: cyan
 ---
 

@@ -292,4 +292,4 @@ export default defineEventHandler(async (event) => {
 - Query better-auth MCP for latest provider requirements
 - Use Argon2id for password hashing (never bcrypt)
 - Store secrets in Cloudflare Workers secrets (not wrangler.toml)
-- See `agents/better-auth-specialist` for detailed guidance
+- See `agents/integrations/better-auth-specialist` for detailed guidance

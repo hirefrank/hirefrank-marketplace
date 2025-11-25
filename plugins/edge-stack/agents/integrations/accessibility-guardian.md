@@ -1,7 +1,7 @@
 ---
 name: accessibility-guardian
 description: Validates WCAG 2.1 AA compliance, keyboard navigation, screen reader compatibility, and accessible design patterns. Ensures distinctive designs remain inclusive and usable by all users regardless of ability.
-model: haiku
+model: sonnet
 color: blue
 ---
 

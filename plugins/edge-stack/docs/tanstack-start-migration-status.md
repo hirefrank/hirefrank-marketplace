@@ -77,7 +77,7 @@
 
 ### 5. New Agents Created
 
-✅ **`tanstack-ui-architect`** (`agents/tanstack-ui-architect.md`)
+✅ **`tanstack-ui-architect`** (`agents/tanstack/tanstack-ui-architect.md`)
 - shadcn/ui component expertise
 - Radix UI primitives knowledge
 - MCP integration for prop validation
@@ -85,7 +85,7 @@
 - Accessibility patterns
 - Bundle size optimization for Workers
 
-✅ **`tanstack-migration-specialist`** (`agents/tanstack-migration-specialist.md`)
+✅ **`tanstack-migration-specialist`** (`agents/tanstack/tanstack-migration-specialist.md`)
 - Framework migration expertise (Vue/Nuxt/Next.js → Tanstack Start)
 - Component mapping strategies
 - Vue→React conversion patterns
@@ -93,7 +93,7 @@
 - State management migration
 - Cloudflare bindings preservation
 
-✅ **`tanstack-routing-specialist`** (`agents/tanstack-routing-specialist.md`)
+✅ **`tanstack-routing-specialist`** (`agents/tanstack/tanstack-routing-specialist.md`)
 - TanStack Router expertise
 - File-based routing patterns
 - Loader implementation strategies
@@ -102,7 +102,7 @@
 - Prefetching strategies
 - Cloudflare Workers optimization
 
-✅ **`tanstack-ssr-specialist`** (`agents/tanstack-ssr-specialist.md`)
+✅ **`tanstack-ssr-specialist`** (`agents/tanstack/tanstack-ssr-specialist.md`)
 - Server-side rendering patterns
 - Streaming SSR with Suspense
 - Server functions implementation
@@ -116,7 +116,7 @@
 
 ### Authentication & Email Integration
 
-✅ **`resend-email-specialist`** (`agents/resend-email-specialist.md`)
+✅ **`resend-email-specialist`** (`agents/integrations/resend-email-specialist.md`)
 - Complete Resend SDK setup for Workers
 - React Email template patterns
 - Transactional + marketing email flows
@@ -164,13 +164,13 @@
 7. ✅ `commands/es-email-setup.md`
 8. ✅ `commands/es-auth-setup.md` (better-auth only)
 9. ✅ `commands/es-billing-setup.md` (Tanstack Start paths)
-10. ✅ `agents/tanstack-ui-architect.md`
-11. ✅ `agents/tanstack-migration-specialist.md`
-12. ✅ `agents/tanstack-routing-specialist.md`
-13. ✅ `agents/tanstack-ssr-specialist.md`
-14. ✅ `agents/resend-email-specialist.md`
-15. ✅ `agents/better-auth-specialist.md` (updated)
-16. ✅ `agents/frontend-design-specialist.md` (updated)
+10. ✅ `agents/tanstack/tanstack-ui-architect.md`
+11. ✅ `agents/tanstack/tanstack-migration-specialist.md`
+12. ✅ `agents/tanstack/tanstack-routing-specialist.md`
+13. ✅ `agents/tanstack/tanstack-ssr-specialist.md`
+14. ✅ `agents/integrations/resend-email-specialist.md`
+15. ✅ `agents/integrations/better-auth-specialist.md` (updated)
+16. ✅ `agents/tanstack/frontend-design-specialist.md` (updated)
 17. ✅ `docs/tanstack-start-migration-status.md` (this file)
 
 ### Framework Consolidation Complete

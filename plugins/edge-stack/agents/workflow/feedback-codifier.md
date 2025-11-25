@@ -30,7 +30,7 @@ When analyzing feedback, prioritize:
 - ❌ Patterns involving Node.js APIs are NOT valid
 - ❌ Traditional server patterns (Express, databases) are NOT applicable
 - ✅ Extract Workers-compatible patterns only
-- ✅ Focus on edge-first thinking
+- ✅ Focus on edge-first evaluation
 - ✅ Update Cloudflare-specific agents only
 
 **User Preferences** (see PREFERENCES.md for full details):

@@ -43,6 +43,13 @@
       "enabled": true,
       "description": "Tailwind CSS utilities, documentation, CSS-to-Tailwind conversion, and component templates"
     },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@context7/mcp"],
+      "type": "stdio",
+      "enabled": true,
+      "description": "Instant documentation lookup for 100+ frameworks including React, TanStack Router, Next.js, Vue, Django, Laravel"
+    },
     "polar": {
       "type": "http",
       "url": "https://mcp.polar.sh/mcp/polar-mcp",
