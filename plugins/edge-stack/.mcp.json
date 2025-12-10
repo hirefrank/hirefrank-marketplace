@@ -55,6 +55,12 @@
       "url": "https://mcp.polar.sh/mcp/polar-mcp",
       "enabled": false,
       "description": "Polar documentation and implementation (requires authentication - enable when needed)"
+    },
+    "beads": {
+      "command": "npx",
+      "args": ["-y", "@beads/mcp-server"],
+      "enabled": false,
+      "description": "Beads issue tracking with git-versioned JSONL storage for multi-session coordination across the 27 edge-stack agents"
     }
   }
 }

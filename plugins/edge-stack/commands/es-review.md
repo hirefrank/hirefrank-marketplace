@@ -365,7 +365,93 @@ Finding: Consider adding more comments
 ```
 </confidence_criteria>
 
-#### Step 2: Present Findings for Triage
+#### Step 2: Choose Tracking System
+
+**CRITICAL**: Before presenting findings, ask user how they want to track them:
+
+```markdown
+Found X findings (Y P1, Z P2, W P3) with confidence ≥80
+
+How would you like to track these findings?
+
+1️⃣  BEADS (recommended for multi-session work)
+   - Git-versioned .beads/ directory
+   - Dependency tracking and auto-unblocking
+   - Ready-work detection (see what can start now)
+   - Resume across sessions
+   - Agent coordination (27 agents)
+   - Good for: 20+ findings, complex dependencies
+
+2️⃣  TODO FILES (current system - todos/*.md)
+   - Markdown files in todos/ directory
+   - Manual tracking and triage
+   - Single-session focus
+   - Good for: < 20 findings, simple workflows
+
+3️⃣  GITHUB ISSUES (public/permanent tracking)
+   - Full PR workflow
+   - External visibility
+   - Good for: Public features, bugs, roadmap
+
+Choose (1/2/3):
+```
+
+**If user chooses BEADS (1):**
+
+1. Check if Beads is initialized:
+   ```bash
+   if [ ! -d ".beads" ]; then
+     echo "Beads not initialized. Initializing now..."
+     # Run /es-beads-init workflow
+   fi
+   ```
+
+2. Create Beads issue for each finding (confidence ≥80):
+   ```bash
+   # For each finding:
+   bd create \
+     --title "Finding Title (file:line)" \
+     --priority p1  # or p2, p3 based on severity \
+     --tag $(extract_tags_from_category) \
+     --tag code-review \
+     --tag confidence-$(confidence_score) \
+     --meta agent=$(suggest_agent_from_tags) \
+     --meta confidence=$(confidence_score) \
+     --meta location=$(file:line) \
+     --meta category=$(category) \
+     --meta evidence="$(evidence_summary)"
+   ```
+
+3. Auto-detect dependencies between findings:
+   ```bash
+   # Example: If finding #5 says "Fix binding config" and
+   # finding #12 says "Use new binding", then:
+   bd block bd-finding5 bd-finding12
+   # (finding12 blocked by finding5)
+   ```
+
+4. Show status and ready work:
+   ```bash
+   /es-beads-status
+   ```
+
+5. Suggest starting first ready issue:
+   ```bash
+   echo "Ready to start? Run:"
+   echo "  /es-work bd-xxxx"
+   ```
+
+6. Skip individual finding triage (all findings are now in Beads)
+
+**If user chooses TODO FILES (2) or GITHUB ISSUES (3):**
+
+Proceed with existing workflow below (present findings one-by-one).
+
+---
+
+#### Step 3: Present Findings for Triage (TODO FILES or GITHUB only)
+
+**NOTE**: This step only runs if user chose TODO FILES or GITHUB ISSUES. If BEADS chosen, skip to Step 4.
 
 For EACH finding (with confidence ≥80), present in this format:
 
@@ -406,7 +492,7 @@ Do you want to add this to the todo list?
 
 **Note**: Findings with confidence <80 are automatically filtered and not shown.
 
-#### Step 3: Create Todo Files for Approved Findings
+#### Step 4: Create Todo Files for Approved Findings (TODO FILES only)
 
 <instructions>
 When user says "yes", create a properly formatted todo file:
@@ -498,7 +584,7 @@ When user says "yes", create a properly formatted todo file:
 
 </todo_creation_process>
 
-#### Step 4: Summary Report
+#### Step 5: Summary Report
 
 After processing all findings:
 
