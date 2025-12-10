@@ -172,19 +172,19 @@ If we create genuinely generic improvements (not Cloudflare-specific), we may co
 
 ## Adoption Metrics
 
-- **Changes reviewed**: 22 (6 + 16)
-- **Changes adopted**: 3
-- **Changes adapted**: 5 (pending)
-- **Changes ignored**: 14 (3 + 11)
-- **Time investment**: ~8-11 hours (pending work)
-- **Value assessment**: High (MCP servers, design workflow, agent organization, image generation)
+- **Changes reviewed**: 66 (6 + 16 + 44)
+- **Changes adopted**: 9 (3 previous + 6 new high-priority)
+- **Changes adapted**: 5 (pending from previous review)
+- **Changes ignored**: 52 (14 previous + 38 new)
+- **Time investment**: ~15-21 hours (8-11 hrs pending + 7-10 hrs new)
+- **Value assessment**: High (workflow improvements, git worktree fixes, documentation enhancements)
 
 ## Current Status
 
-**Last Review**: 2025-11-25
-**Next Review**: 2025-12-25
+**Last Review**: 2025-12-10
+**Next Review**: 2026-01-10
 **Tracking Active**: Yes
-**Value Assessment**: High value - upstream continues providing valuable MCP integrations and workflow improvements
+**Value Assessment**: High value - upstream provides valuable workflow patterns and generic improvements
 
 ---
 
@@ -380,3 +380,267 @@ If we create genuinely generic improvements (not Cloudflare-specific), we may co
 - **Plugins installed**: 0 (implementing patterns ourselves)
 - **Last review**: 2025-11-25
 - **Next review**: 2025-12-25
+
+---
+
+## Review: 2025-12-10
+
+**Review Period**: 2025-11-25 → 2025-12-10
+**Commits Analyzed**: 44 (66 total commits tracked)
+**Upstream Version**: v2.9.4 (compound-engineering rename, workflow enhancements)
+
+### Summary Statistics
+
+| Category | Count |
+|----------|-------|
+| **To Adopt** | 6 (all high/medium priority) |
+| **To Ignore** | 38 (docs, branding, merges) |
+
+**Effort Estimates**:
+- High Priority (adopt immediately): 3-4 hours
+- Medium Priority (adopt this month): 4-6 hours
+- **Total**: 7-10 hours
+
+### Critical Insights
+
+**Upstream renamed**: `compounding-engineering` → `compound-engineering` (philosophical shift, doesn't affect us)
+
+**Major divergence**: Upstream **removed feedback-codifier agent** (v2.6.0). We're **keeping ours** - different architectural decision for edge-first development.
+
+**Community contributions**: Accepting external PRs (Ben Fisher's worktree fix, Julik's JS reviewer)
+
+---
+
+### 🚨 High Priority (Adopt Immediately)
+
+#### 1. Git Worktree .env Auto-Copy Fix
+- **Upstream commit**: 44a0acb5 (Ben Fisher)
+- **Date**: 2025-11-27
+- **Category**: Bug Fix (Critical)
+- **Description**: Automatically copies `.env` files when creating git worktrees for parallel execution
+- **Why Critical**: Without this, Cloudflare Workers dev server fails in worktrees (missing env vars)
+- **Implementation**:
+  ```bash
+  # Apply to: plugins/edge-stack/skills/git-worktree/scripts/worktree-manager.sh
+  # Add after worktree creation:
+  if [ -f "$MAIN_REPO/.env" ]; then
+    cp "$MAIN_REPO/.env" "$WORKTREE_PATH/.env"
+    echo "✅ Copied .env to worktree"
+  fi
+  ```
+- **Effort**: TRIVIAL (30 min)
+- **Priority**: CRITICAL
+- **Impact**: Prevents Workers dev server failures in parallel workflows
+
+#### 2. Year Context (2025) for Research Agents
+- **Upstream commit**: 59c55cb9
+- **Date**: 2025-11-27
+- **Category**: Enhancement (Research)
+- **Description**: Add explicit year note (2025) to research agents to prevent outdated documentation searches
+- **Why Relevant**: Our research agents fetch web docs - need current year context
+- **Implementation**:
+  ```bash
+  # Apply to: plugins/edge-stack/agents/research/git-history-analyzer.md
+  # Add to system prompt:
+  "IMPORTANT: Today's date is 2025. When searching for documentation or examples, 
+   prioritize 2025 resources over 2024 or older content."
+  ```
+- **Effort**: TRIVIAL (15 min)
+- **Priority**: HIGH
+- **Impact**: Prevents outdated documentation references
+
+#### 3. Enhanced /es-plan Command (Post-Generation Menu)
+- **Upstream commits**: 814c2372, a165503e, 5febbf11
+- **Dates**: 2025-11-27, 2025-12-04, 2025-12-05
+- **Category**: Workflow Enhancement
+- **Description**: After plan generation, offer clear menu:
+  - Option 1: Start work immediately
+  - Option 2: Open plan in editor for review
+  - Option 3: Create GitHub/Linear issues from plan
+  - Option 4: Exit
+- **Why Relevant**: Improves workflow clarity, reduces friction
+- **Implementation**:
+  ```bash
+  # Apply to: plugins/edge-stack/commands/es-plan.md
+  # Add after plan generation:
+  echo "Plan saved to: $PLAN_FILE"
+  echo ""
+  echo "Next steps:"
+  echo "1. /es-work (start implementing)"
+  echo "2. Open $PLAN_FILE in editor to review"
+  echo "3. gh issue create --body-file $PLAN_FILE (create issue)"
+  echo "4. Continue conversation"
+  ```
+- **Effort**: SMALL (1-2 hours)
+- **Priority**: HIGH
+- **Impact**: Better workflow UX, clearer next steps
+
+---
+
+### 📋 Medium Priority (Adopt This Month)
+
+#### 4. Screenshot Documentation in /es-work
+- **Upstream commits**: 6ed1aae8, 514e984a
+- **Dates**: 2025-12-04, 2025-12-08
+- **Category**: Workflow Enhancement
+- **Description**: Add step to /es-work command prompting for screenshots when changes affect UI
+- **Why Relevant**: We have Playwright MCP - can leverage for better PR documentation
+- **Implementation**:
+  ```bash
+  # Apply to: plugins/edge-stack/commands/es-work.md
+  # Add after implementation phase:
+  if [[ "$CHANGES_AFFECT_UI" == "true" ]]; then
+    echo "📸 Capture screenshots of UI changes using Playwright MCP"
+    echo "   Run: browser_take_screenshot with relevant selectors"
+    echo "   Save to: screenshots/pr-{number}/"
+  fi
+  ```
+- **Effort**: SMALL (1-2 hours)
+- **Priority**: MEDIUM
+- **Impact**: Better PR documentation, visual change tracking
+
+#### 5. /es-report-bug Command
+- **Upstream commit**: 531cfe7c
+- **Date**: 2025-11-25
+- **Category**: New Command
+- **Description**: Structured bug reporting command that collects:
+  - Steps to reproduce
+  - Expected vs actual behavior
+  - Environment details (Claude Code version, OS, Node version)
+  - Relevant logs
+  - Screenshots (if UI bug)
+- **Why Relevant**: Community plugin - need structured issue reporting
+- **Implementation**:
+  ```bash
+  # Create: plugins/edge-stack/commands/es-report-bug.md
+  # Template:
+  1. Collect reproduction steps
+  2. Capture environment (claude --version, wrangler --version)
+  3. Gather relevant logs
+  4. Format as GitHub issue
+  5. Open browser to: https://github.com/hirefrank/marketplace/issues/new
+  ```
+- **Effort**: SMALL (1-2 hours)
+- **Priority**: MEDIUM
+- **Impact**: Better community bug reports, easier triage
+
+#### 6. Agent-Native Architecture Skill
+- **Upstream commit**: 27d07d06 (Dan Shipper)
+- **Date**: 2025-12-08
+- **Category**: New Skill
+- **Description**: Dan Shipper's architectural philosophy skill covering:
+  - Event-driven vs request-response patterns
+  - Agent collaboration patterns
+  - State management for agents
+  - Message passing architectures
+- **Why Relevant**: Valuable for designing MCP servers and multi-agent workflows
+- **Implementation**:
+  ```bash
+  # Create: plugins/edge-stack/skills/agent-native-architecture/
+  # Files:
+  # - SKILL.md (philosophy and patterns)
+  # - examples/ (Cloudflare-specific examples using Durable Objects, Queues)
+  ```
+- **Effort**: MEDIUM (2-3 hours) - needs Cloudflare adaptation
+- **Priority**: MEDIUM
+- **Impact**: Better architectural decisions for agent systems
+
+---
+
+### ❌ Ignored Changes (38 commits)
+
+#### Documentation Site Overhaul (15 commits)
+- **Commits**: 91bd7e81, 53ba12f0, 92d0e237, 6721f051, 1da08afa, 733e59a7, b503a3ec, 7901ef22, 1808f901, 05303d42, 2f734631, f63dab9f, 3c729b3b, c0570816, 13d31702
+- **Description**: Complete GitHub Pages documentation site with VitePress
+- **Reason**: Deferred to Q1 2026 - significant effort (8-10 hours), lower priority than workflow improvements
+- **Future consideration**: Adopt docs structure if community requests better documentation
+
+#### Plugin Rename (1 commit)
+- **Commit**: 6c5b3e40
+- **Description**: Rename plugin from "compounding-engineering" to "compound-engineering"
+- **Reason**: Upstream branding decision, doesn't affect our "edge-stack" branding
+
+#### Feedback-Codifier Removal (1 commit)
+- **Commit**: 733e59a7
+- **Description**: Removed feedback-codifier agent from upstream
+- **Reason**: **Strategic divergence** - we're keeping our feedback-codifier. Different architectural philosophy for edge-first development. Upstream focuses on compound interest metaphor; we focus on continuous learning from Cloudflare/Tanstack patterns.
+
+#### Internal Planning Documents (2 commits)
+- **Commits**: f2db1277, d367b257
+- **Description**: Internal "grow-your-own-garden" planning, docs rewrite in "Pragmatic Technical Writing" style
+- **Reason**: Upstream-specific planning, not applicable to our repo
+
+#### Command Renames (1 commit)
+- **Commit**: dbdd9c66
+- **Description**: Renamed `/codify` → `/compound` and `codify-docs` → `compound-docs`
+- **Reason**: We don't have these commands (we have `/es-*` namespace)
+
+#### Community Contributions - JS Reviewer (4 commits)
+- **Commits**: 80fa2e3d, 224d4bb5, 466a7f19, 806a6068
+- **Description**: Julik Tarkhanov's specialized JS reviewer agent for frontend race conditions
+- **Reason**: Too generic - our `frontend-design-specialist.md` already covers React/Tanstack-specific patterns with Cloudflare context
+
+#### Gemini Imagegen Updates (3 commits)
+- **Commits**: 31c36303, 04d3d195, 129a21d6
+- **Description**: Updates to gemini-imagegen skill (Pro model, file format docs)
+- **Reason**: We already tracked gemini-imagegen adoption in previous review (pending implementation)
+
+#### Merge Commits (6 commits)
+- **Commits**: 8f1a7ab2, 4b49e534, 43ce6ebf, 852b0b89, 93418728, eaf3cd9d
+- **Reason**: No unique content
+
+#### Documentation Fixes (3 commits)
+- **Commits**: 4b2820bd, ff9fd7cb, e00b9d3d
+- **Description**: Minor documentation typo fixes, version bumps
+- **Reason**: Trivial changes specific to upstream docs
+
+#### Discord Webhook Removal (1 commit)
+- **Commit**: 04d3d195
+- **Description**: Remove hardcoded Discord webhook from changelog command
+- **Reason**: We don't have a changelog command with webhooks
+
+---
+
+### Implementation Priority
+
+| Priority | Change | Effort | Week | Files |
+|----------|--------|--------|------|-------|
+| CRITICAL | Git worktree .env auto-copy | 30 min | 1 | `skills/git-worktree/scripts/worktree-manager.sh` |
+| HIGH | Year context (2025) | 15 min | 1 | `agents/research/git-history-analyzer.md` |
+| HIGH | Enhanced /es-plan menu | 1-2 hrs | 1 | `commands/es-plan.md` |
+| MEDIUM | Screenshot docs in /es-work | 1-2 hrs | 2 | `commands/es-work.md` |
+| MEDIUM | /es-report-bug command | 1-2 hrs | 2 | `commands/es-report-bug.md` (new) |
+| MEDIUM | Agent-native-architecture skill | 2-3 hrs | 3 | `skills/agent-native-architecture/` (new) |
+
+**Total estimated effort**: 7-10 hours over 3 weeks
+
+---
+
+### Lessons Learned
+
+**Strategic Divergence is OK**: Upstream removed feedback-codifier; we're keeping it. Different architectural philosophies lead to different decisions. This is healthy.
+
+**Community Contributions Work**: Ben Fisher's worktree fix and Julik's JS reviewer show upstream accepts external PRs. We should consider contributing back generic improvements.
+
+**Documentation Investment**: Upstream spent significant effort (15 commits) on docs site. We're deferring this - prioritizing workflow improvements first, docs later.
+
+**Workflow Enhancements Matter Most**: The highest-value changes are workflow improvements (/plan menu, screenshot docs, bug reporting) - these directly improve developer experience.
+
+---
+
+### Value Assessment
+
+**High-value changes identified**:
+1. **Git worktree .env copy** - Prevents critical Workers dev failures
+2. **Year context** - Ensures current documentation searches
+3. **Enhanced /es-plan workflow** - Clearer next steps, better UX
+4. **Screenshot documentation** - Leverages existing Playwright MCP
+5. **Structured bug reporting** - Better community engagement
+6. **Agent-native architecture** - Dan Shipper's architectural insights
+
+**Strategic insight**: Upstream is maturing their workflow commands and accepting community contributions. We should:
+- Implement their workflow improvements quickly
+- Consider contributing our Cloudflare-specific patterns back upstream
+- Monitor for additional community contributions that apply to edge-first development
+
+**Next review focus**: Watch for MCP server additions, multi-agent orchestration improvements, and additional workflow command enhancements.

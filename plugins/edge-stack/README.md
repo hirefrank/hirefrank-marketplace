@@ -14,8 +14,8 @@ Build modern web applications with **Tanstack Start** (React), Cloudflare Worker
 
 This plugin transforms Claude Code into a complete edge-first full-stack development platform through:
 - **27 specialized agents** ([browse all](agents/)) - 12 Cloudflare + 5 Tanstack + 6 Integration + 3 Workflow + 1 Research, all with MCP integration
-- **13 autonomous SKILLs** ([browse all](skills/)) - 7 Cloudflare + 4 Frontend Design + 2 Security
-- **24 workflow commands** ([browse all](commands/)) - Setup wizards, migration tools, test generation, and automation
+- **14 autonomous SKILLs** ([browse all](skills/)) - 7 Cloudflare + 4 Frontend Design + 2 Security + 1 Architecture
+- **26 workflow commands** ([browse all](commands/)) - Setup wizards, migration tools, test generation, community tools, and automation
 - **Self-improvement** through feedback codification
 - **Multi-phase parallel execution**
 - **Real-time account context** via MCP servers (optional but recommended)
@@ -24,22 +24,22 @@ This plugin transforms Claude Code into a complete edge-first full-stack develop
 
 ## 🚀 MCP Server Integration (Automatically Bundled)
 
-**NEW**: MCP servers are now bundled with the plugin! When you install this plugin, 9 MCP servers are automatically configured (8 active by default, 1 optional):
+**NEW**: MCP servers are now bundled with the plugin! When you install this plugin, 9 MCP servers are automatically configured (6 active by default):
 
 **Active by default**:
-- **Cloudflare MCP** (`https://docs.mcp.cloudflare.com/mcp`) - Documentation search, bindings management, and account context
 - **shadcn/ui MCP** (`npx shadcn@latest mcp`) - Component documentation for Tanstack Start projects
 - **better-auth MCP** (`https://mcp.chonkie.ai/better-auth/better-auth-builder/mcp`) - Authentication patterns and OAuth provider setup
 - **Playwright MCP** (`npx @playwright/mcp@latest`) - Official Microsoft browser automation for E2E test generation
 - **Package Registry MCP** (`npx -y package-registry-mcp`) - Search NPM, Cargo, PyPI, and NuGet for up-to-date package information
-- **TanStack Router MCP** (`https://gitmcp.io/TanStack/router`) - TanStack Router documentation for type-safe routing patterns
 - **Tailwind CSS MCP** (`npx -y tailwindcss-mcp-server`) - Tailwind utilities, CSS-to-Tailwind conversion, and component templates
-- **Context7 MCP** (`npx -y @context7/mcp`) - Instant documentation lookup for 100+ frameworks (React, Next.js, Vue, Django, Laravel, etc.)
+- **Context7 MCP** (`npx -y @context7/mcp`) - Instant documentation lookup for 100+ frameworks including Cloudflare (Workers, KV, R2, D1), TanStack Router, React, Next.js, Vue, Django, Laravel
 
-**Optional (requires authentication)**:
-- **Polar MCP** (`https://mcp.polar.sh/mcp/polar-mcp`) - Billing integration and subscription management (disabled by default, enable via `/mcp` when needed)
+**Disabled by default** (available in `.mcp.json` if needed):
+- **Cloudflare MCP** (`https://docs.mcp.cloudflare.com/mcp`) - Disabled (documentation covered by Context7)
+- **TanStack Router MCP** (`https://gitmcp.io/TanStack/router`) - Disabled (documentation covered by Context7)
+- **Polar MCP** (`https://mcp.polar.sh/mcp/polar-mcp`) - Disabled (requires authentication - enable when needed)
 
-**No manual configuration needed!** Just install the plugin and the 8 core MCP servers work immediately.
+**No manual configuration needed!** Just install the plugin and the 6 core MCP servers work immediately.
 
 ### What MCP Provides
 
@@ -58,11 +58,11 @@ This plugin transforms Claude Code into a complete edge-first full-stack develop
 - "React 19 useOptimistic hook documentation (via Context7): handles optimistic UI updates..."
 
 **Benefits**:
-- ✅ **98.7% token reduction** (via execution environment filtering)
-- ✅ **Real-time account data** (bindings, metrics, security events)
-- ✅ **Accurate documentation** (always latest from Cloudflare, shadcn/ui, TanStack, React, and 100+ frameworks)
+- ✅ **Accurate documentation** (always latest from Cloudflare, shadcn/ui, TanStack, React, and 100+ frameworks via Context7)
 - ✅ **No hallucinations** (component props validated from official sources)
-- ✅ **Data-driven recommendations** (based on your actual usage)
+- ✅ **Current package data** (NPM, PyPI, Cargo, NuGet with version info and weekly downloads)
+- ✅ **Browser automation** (Playwright for E2E testing and screenshot capture)
+- ✅ **Type-safe components** (shadcn/ui props, Tailwind utilities, better-auth patterns)
 
 ### MCP Setup (Automatic)
 
@@ -236,7 +236,7 @@ This prevents sloppy code and ensures consistent quality across all commits.
 
 ## Commands
 
-All 24 commands are organized by functional area. [Browse all commands →](commands/)
+All 25 commands are organized by functional area. [Browse all commands →](commands/)
 
 ### Workflow & Planning (6)
 - **[`/es-review`](commands/es-review.md)** - Multi-phase code review with parallel Cloudflare-focused agents
@@ -246,13 +246,14 @@ All 24 commands are organized by functional area. [Browse all commands →](comm
 - **[`/es-resolve-parallel`](commands/es-resolve-parallel.md)** - Execute multiple todos and GitHub issues concurrently
 - **[`/generate_command`](commands/generate_command.md)** - Meta-command for creating custom commands
 
-### Cloudflare Workers (4)
+### Cloudflare Workers (5)
 - **[`/es-worker`](commands/es-worker.md)** - Generate Workers with bindings, validation, and deployment
 - **[`/es-deploy`](commands/es-deploy.md)** - Pre-flight validation + wrangler deploy
 - **[`/es-migrate`](commands/es-migrate.md)** - Migrate from other platforms to Cloudflare Workers
 - **[`/es-validate`](commands/es-validate.md)** - Run comprehensive code quality checks
+- **[`/es-verify-output`](commands/es-verify-output.md)** - Verify AI-generated code with confidence scoring
 
-### Tanstack Start (5)
+### Tanstack Start (4)
 - **[`/es-tanstack-migrate`](commands/es-tanstack-migrate.md)** - Migrate React apps to Tanstack Start
 - **[`/es-tanstack-route`](commands/es-tanstack-route.md)** - Create type-safe TanStack Router routes
 - **[`/es-tanstack-server-fn`](commands/es-tanstack-server-fn.md)** - Generate React Server Functions
@@ -273,8 +274,9 @@ All 24 commands are organized by functional area. [Browse all commands →](comm
 - **[`/es-test-gen`](commands/es-test-gen.md)** - Generate Playwright E2E tests
 - **[`/es-validate`](commands/es-validate.md)** - Run comprehensive validation (build, lint, types, wrangler)
 
-### Utilities (1)
+### Utilities (2)
 - **[`/es-commit`](commands/es-commit.md)** - Auto-stage, generate commit message, and push to current branch
+- **[`/es-report-bug`](commands/es-report-bug.md)** - Report bugs in edge-stack plugin with structured information
 
 ## Agents
 
@@ -319,7 +321,7 @@ All 27 agents include MCP integration for real-time account context and document
 
 ## Skills
 
-All 13 autonomous SKILLs provide real-time validation and guidance during development. [Browse all skills →](skills/)
+All 14 autonomous SKILLs provide real-time validation and guidance during development. [Browse all skills →](skills/)
 
 ### Cloudflare Validation (4)
 - **[`workers-runtime-validator`](skills/workers-runtime-validator/)** - Auto-validates Workers runtime compatibility (forbidden APIs, env patterns)
@@ -341,6 +343,9 @@ All 13 autonomous SKILLs provide real-time validation and guidance during develo
 - **[`auth-security-validator`](skills/auth-security-validator/)** - Auto-validates better-auth patterns, session security, CSRF protection
 - **[`polar-integration-validator`](skills/polar-integration-validator/)** - Auto-checks Polar.sh webhook handling, subscription flows
 - **[`cloudflare-security-checker`](skills/cloudflare-security-checker/)** - Auto-validates secret management, runtime isolation, CORS/CSP
+
+### Architecture & Patterns (1)
+- **[`agent-native-architecture`](skills/agent-native-architecture/)** - Dan Shipper's architectural philosophy for building agent systems on Cloudflare (Durable Objects, Workers, Queues)
 
 ## How It Works
 

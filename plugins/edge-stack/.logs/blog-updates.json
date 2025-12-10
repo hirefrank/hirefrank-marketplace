@@ -1,12 +1,20 @@
 {
-  "lastRun": "2025-11-25T12:00:00.000Z",
-  "lastReviewDate": "2025-11-25",
-  "nextScheduledRun": "2025-12-25",
-  "totalRuns": 1,
+  "lastRun": "2025-12-10T12:00:00.000Z",
+  "lastReviewDate": "2025-12-10",
+  "nextScheduledRun": "2026-01-10",
+  "totalRuns": 2,
   "postsAnalyzed": {
-    "2025-11-25": 5
+    "2025-11-25": 5,
+    "2025-12-10": 5
   },
   "lastProcessedPosts": [
+    "https://www.anthropic.com/research/how-ai-is-transforming-work-at-anthropic",
+    "https://www.anthropic.com/engineering/building-agents-with-the-claude-agent-sdk",
+    "https://www.anthropic.com/research/prompt-injection-defenses",
+    "https://www.anthropic.com/news/donating-the-model-context-protocol-and-establishing-of-the-agentic-ai-foundation",
+    "https://www.anthropic.com/research/project-fetch-robot-dog",
+    "https://www.anthropic.com/research/introspection",
+    "https://www.anthropic.com/research/anthropic-interviewer",
     "https://www.anthropic.com/engineering/advanced-tool-use",
     "https://www.anthropic.com/engineering/code-execution-with-mcp",
     "https://www.anthropic.com/engineering/claude-code-sandboxing",

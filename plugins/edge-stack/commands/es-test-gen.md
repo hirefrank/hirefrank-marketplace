@@ -26,6 +26,22 @@ This command generates ready-to-use Playwright tests that cover:
 - Route or component to test
 </requirements>
 
+## Security Considerations
+
+⚠️ **Security Note**: When generating tests that interact with external websites or untrusted content, be aware that malicious web pages could attempt prompt injection attacks against browser automation agents. Review generated test code carefully, especially:
+- Navigation logic (`page.goto()` calls to external sites)
+- Data extraction from untrusted pages
+- Form filling with sensitive information
+- Click actions on external sites
+
+**Best Practices**:
+- Test against your own controlled test environments when possible
+- Review any navigation to external URLs in generated tests
+- Avoid testing workflows that expose credentials to untrusted sites
+- Use test fixtures and mocked data instead of live external APIs
+
+For more information, see [Anthropic's research on prompt injection defenses](https://www.anthropic.com/research/prompt-injection-defenses).
+
 ## Command Usage
 
 ```bash

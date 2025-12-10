@@ -84,6 +84,31 @@ Provide your plan in clear sections:
 
 Keep your plan concise but comprehensive. Focus on the "what" and "why" rather than the "how" (save implementation details for later).
 
+## Output Format
+
+Write the plan to `plans/<project_name>.md` using an appropriate file name based on the project or feature being planned.
+
+## Post-Generation Options
+
+After writing the plan file, use the **AskUserQuestion tool** to present these options:
+
+**Question:** "Plan ready at `plans/<project_name>.md`. What would you like to do next?"
+
+**Options:**
+1. **Open plan in editor** - Open the plan file for review
+2. **Start `/es-work`** - Begin implementing this plan locally
+3. **Create GitHub issue** - Create issue from plan using `gh issue create --body-file plans/<project_name>.md`
+4. **Continue conversation** - Ask clarifying questions or request changes to the plan
+
+Based on selection:
+- **Open plan in editor** → Run `open plans/<project_name>.md` to open the file in the user's default editor
+- **Start `/es-work`** → Call the /es-work command with the plan file path as argument
+- **Create GitHub issue** → Run `gh issue create --body-file plans/<project_name>.md --title "[Title]"` after asking for issue title
+- **Continue conversation** → Accept free text for clarifications, refinements, or specific changes to the plan
+- **Other** (automatically provided) → Accept free text, act on it
+
+Loop back to options after making changes until user selects `/es-work` or creates an issue.
+
 ---
 
 **User's Request:**

@@ -39,6 +39,13 @@ This enables all subsequent agents to analyze actual code, not just diffs.
 - [ ] Determine review type: PR number (numeric), GitHub URL, file path (.md), or empty (latest PR)
 - [ ] Create worktree directory structure at `$git_root/.worktrees/reviews/pr-$identifier`
 - [ ] Check out PR branch in isolated worktree using `gh pr checkout`
+- [ ] Copy .env file to worktree if it exists (critical for Cloudflare Workers dev server):
+  ```bash
+  if [ -f "$git_root/.env" ]; then
+    cp "$git_root/.env" "$git_root/.worktrees/reviews/pr-$identifier/.env"
+    echo "✅ Copied .env to worktree"
+  fi
+  ```
 - [ ] Navigate to worktree - ALL subsequent analysis happens here
 
 - Fetch PR metadata using `gh pr view --json` for title, body, files, linked issues
