@@ -12,6 +12,74 @@
     "lightweight": "claude-haiku-4-20250514"
   },
 
+  // === Instructions (Rules Files) ===
+  // Loaded automatically to provide project context
+  "instructions": [
+    "AGENTS.md",
+    ".opencode/knowledge/guidelines.md",
+    ".opencode/knowledge/cloudflare-patterns.md"
+  ],
+
+  // === Key Bindings ===
+  // Quick access to common operations (press leader key first, then shortcut)
+  "keybinds": {
+    "leader": "ctrl+x",
+    "new_session": "n",
+    "open_session": "o",
+    "share": "s",
+    "undo": "u",
+    "redo": "r",
+    "help": "h",
+    "quit": "q"
+  },
+
+  // === Formatters ===
+  // Auto-format files after editing
+  "formatter": {
+    "prettier": {
+      "command": ["npx", "prettier", "--write", "$FILE"],
+      "extensions": [".js", ".ts", ".jsx", ".tsx", ".json", ".md", ".css"]
+    }
+  },
+
+  // === Context Triggers (Progressive Disclosure) ===
+  // Load context dynamically based on conversation content
+  "context_triggers": {
+    // Cloudflare resource selection - when to use KV vs DO vs R2
+    "rate limit|strong consistency|Durable Object|DO pattern|WebSocket": {
+      "load": [".opencode/knowledge/cloudflare-patterns.md"],
+      "agent": "durable-objects"
+    },
+    // Runtime compatibility issues - Node.js API violations
+    "process\\.env|require\\(|Buffer|fs module|Node\\.js|not working in Workers": {
+      "load": [".opencode/knowledge/cloudflare-patterns.md"],
+      "agent": "runtime-guardian"
+    },
+    // UI component questions - shadcn/ui props and patterns
+    "shadcn|Button|Card|Dialog|variant|className|component prop": {
+      "mcp": "shadcn",
+      "agent": "ui-validator"
+    },
+    // Design and aesthetics - prevent generic AI patterns
+    "Inter font|Roboto|purple gradient|generic|aesthetic|design review|distinctive": {
+      "load": [".opencode/knowledge/design-anti-patterns.md"]
+    },
+    // Authentication setup
+    "auth|login|session|OAuth|passkey|better-auth|sign in": {
+      "mcp": "better-auth",
+      "load": [".opencode/knowledge/guidelines.md"]
+    },
+    // Performance optimization
+    "cold start|bundle size|slow|optimize|performance|latency|edge": {
+      "load": [".opencode/knowledge/cloudflare-patterns.md"],
+      "agent": "architect"
+    },
+    // Code review requests
+    "review|PR|pull request|check this|what's wrong|look at": {
+      "agent": "reviewer"
+    }
+  },
+
   // === MCP Server Configuration ===
   // Heavy servers use defer_loading to prevent context overload at startup
   "mcp": {
