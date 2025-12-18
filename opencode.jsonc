@@ -1,0 +1,177 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+
+  // Edge Stack - OpenCode Configuration
+  // Migrated from Claude Code plugin architecture to script-native OpenCode
+  // Optimized for Claude 4.5 Opus with token-efficient "Hard Tools"
+
+  // === Model Configuration ===
+  "model": {
+    "primary": "claude-opus-4-5-20251101",
+    "fallback": "claude-sonnet-4-20250514",
+    "lightweight": "claude-haiku-4-20250514"
+  },
+
+  // === MCP Server Configuration ===
+  // Heavy servers use defer_loading to prevent context overload at startup
+  "mcp": {
+    // Primary documentation lookup - ALWAYS ENABLED
+    "context7": {
+      "type": "local",
+      "command": ["npx", "-y", "@context7/mcp"],
+      "enabled": true,
+      "description": "Documentation lookup for 100+ frameworks including Cloudflare (Workers, KV, R2, D1, Pages), TanStack Router, React"
+    },
+
+    // UI component documentation - ALWAYS ENABLED (prevents hallucinated props)
+    "shadcn": {
+      "type": "local",
+      "command": ["npx", "shadcn@latest", "mcp"],
+      "enabled": true,
+      "description": "shadcn/ui component documentation - prevents prop hallucination"
+    },
+
+    // Tailwind CSS utilities - ALWAYS ENABLED
+    "tailwindcss": {
+      "type": "local",
+      "command": ["npx", "-y", "tailwindcss-mcp-server"],
+      "enabled": true,
+      "description": "Tailwind CSS utilities, CSS-to-Tailwind conversion, component templates"
+    },
+
+    // Better Auth - ENABLED for auth patterns
+    "better-auth": {
+      "type": "remote",
+      "url": "https://mcp.chonkie.ai/better-auth/better-auth-builder/mcp",
+      "enabled": true,
+      "description": "Better Auth implementation patterns for Tanstack Start"
+    },
+
+    // Heavy servers with defer_loading to reduce startup context
+    "playwright": {
+      "type": "local",
+      "command": ["npx", "@playwright/mcp@latest"],
+      "enabled": true,
+      "defer_loading": true,
+      "description": "Browser automation and E2E testing - loaded on demand"
+    },
+
+    "package-registry": {
+      "type": "local",
+      "command": ["npx", "-y", "package-registry-mcp"],
+      "enabled": true,
+      "defer_loading": true,
+      "description": "NPM, Cargo, PyPI, NuGet package search - loaded on demand"
+    },
+
+    // Disabled servers (redundant or require auth)
+    "cloudflare-docs": {
+      "type": "remote",
+      "url": "https://docs.mcp.cloudflare.com/mcp",
+      "enabled": false,
+      "description": "Cloudflare docs - redundant with context7"
+    },
+
+    "tanstack-router": {
+      "type": "local",
+      "command": ["npx", "-y", "mcp-remote", "https://gitmcp.io/TanStack/router"],
+      "enabled": false,
+      "description": "TanStack Router docs - redundant with context7"
+    },
+
+    "polar": {
+      "type": "remote",
+      "url": "https://mcp.polar.sh/mcp/polar-mcp",
+      "enabled": false,
+      "description": "Polar billing - requires authentication"
+    }
+  },
+
+  // === Global Tool Permissions ===
+  // Disable heavy MCP tools globally, enable per-agent
+  "tools": {
+    "playwright*": false,
+    "package-registry*": false
+  },
+
+  // === Agent Configuration ===
+  // Specialized agents with scoped tool access
+  "agent": {
+    // Primary architect persona - consolidates high-level guidance
+    "architect": {
+      "model": "claude-opus-4-5-20251101",
+      "temperature": 0.3,
+      "description": "Senior Cloudflare Architect - edge-first design, resource selection, Workers patterns",
+      "tools": {
+        "context7*": true,
+        "shadcn*": true
+      }
+    },
+
+    // Runtime validator - catches Node.js API violations
+    "runtime-validator": {
+      "model": "claude-haiku-4-20250514",
+      "description": "Workers runtime compatibility validator - catches forbidden APIs",
+      "tools": {}
+    },
+
+    // Binding analyzer - parses wrangler.toml, generates Env interfaces
+    "binding-analyzer": {
+      "model": "claude-haiku-4-20250514",
+      "description": "Analyzes wrangler.toml bindings and generates TypeScript interfaces"
+    },
+
+    // UI validator - prevents shadcn prop hallucination
+    "ui-validator": {
+      "model": "claude-haiku-4-20250514",
+      "description": "Validates shadcn/ui component usage",
+      "tools": {
+        "shadcn*": true
+      }
+    },
+
+    // Testing specialist - uses Playwright
+    "testing": {
+      "model": "claude-sonnet-4-20250514",
+      "description": "E2E testing with Playwright",
+      "tools": {
+        "playwright*": true
+      }
+    },
+
+    // Feedback codifier - the learning engine
+    "feedback-codifier": {
+      "model": "claude-opus-4-5-20251101",
+      "temperature": 0.2,
+      "description": "Extracts and validates patterns from feedback, updates knowledge base",
+      "tools": {
+        "context7*": true
+      }
+    },
+
+    // Code reviewer - comprehensive review with confidence scoring
+    "reviewer": {
+      "model": "claude-opus-4-5-20251101",
+      "description": "Multi-agent code review orchestrator",
+      "tools": {
+        "context7*": true,
+        "shadcn*": true
+      }
+    }
+  },
+
+  // === Security Permissions ===
+  "permissions": {
+    // Allow reading env files (needed for worktree copying)
+    "allow": [
+      "read:.env*",
+      "read:wrangler.toml"
+    ],
+    // Prevent destructive operations
+    "deny": [
+      "bash:rm -rf",
+      "bash:git push --force",
+      "bash:git reset --hard"
+    ]
+  }
+}
