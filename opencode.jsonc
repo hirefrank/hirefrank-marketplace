@@ -81,6 +81,10 @@
     // Semantic code search - use mgrep for intent-based queries
     "find.*where|search.*for|look.*for|how does.*work|what.*calls|who uses": {
       "load": [".opencode/knowledge/mgrep-patterns.md"]
+    },
+    // Task management - beads for cross-session persistence
+    "task|todo|pending|what.*next|continue|pick up|left off|multi-session": {
+      "load": [".opencode/knowledge/beads-patterns.md"]
     }
   },
 

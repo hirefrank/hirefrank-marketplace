@@ -238,6 +238,41 @@ Hard Tools and MCP servers provide ground truth.
 
 ---
 
+## Task Management
+
+Use the right tool for the right scope:
+
+| Tool | Scope | Persistence | When |
+|------|-------|-------------|------|
+| **TodoWrite** | Single session | Ephemeral | Real-time progress visibility |
+| **beads** | Cross-session | Git-backed | Multi-step work, dependencies |
+| **GitHub Issues** | Project | External | Team collaboration, user bugs |
+
+### Session Workflow
+
+```bash
+# Session start - check pending work
+bd ready
+
+# During session - use TodoWrite for user visibility
+# (automatic via AI tools)
+
+# Session end - persist state
+bd done bd-a1b2           # Mark completed
+bd add "Continue X"       # Create for next session
+```
+
+### When to Use beads
+
+- Task spans multiple conversations
+- Work has dependencies ("do X before Y")
+- Need to track complex migrations
+- Want queryable task history
+
+See `.opencode/knowledge/beads-patterns.md` for detailed usage.
+
+---
+
 ## Quick Reference
 
 | Task | Command |
