@@ -180,9 +180,13 @@
   },
 
   // === Agent Configuration ===
-  // Specialized agents with scoped tool access
+  // Grouped by model class for easy updates when new models release
+  // To update: find/replace model ID within each class section
   "agent": {
-    // Primary architect persona - consolidates high-level guidance
+    // ┌─────────────────────────────────────────────────────────────┐
+    // │ MODEL CLASS: OPUS (deep thinking, complex reasoning)        │
+    // │ Current: claude-opus-4-5-20251101                           │
+    // └─────────────────────────────────────────────────────────────┘
     "architect": {
       "model": "claude-opus-4-5-20251101",
       "temperature": 0.3,
@@ -192,39 +196,6 @@
         "shadcn*": true
       }
     },
-
-    // Runtime validator - catches Node.js API violations
-    "runtime-validator": {
-      "model": "claude-haiku-4-20250514",
-      "description": "Workers runtime compatibility validator - catches forbidden APIs",
-      "tools": {}
-    },
-
-    // Binding analyzer - parses wrangler.toml, generates Env interfaces
-    "binding-analyzer": {
-      "model": "claude-haiku-4-20250514",
-      "description": "Analyzes wrangler.toml bindings and generates TypeScript interfaces"
-    },
-
-    // UI validator - prevents shadcn prop hallucination
-    "ui-validator": {
-      "model": "claude-haiku-4-20250514",
-      "description": "Validates shadcn/ui component usage",
-      "tools": {
-        "shadcn*": true
-      }
-    },
-
-    // Testing specialist - uses Playwright
-    "testing": {
-      "model": "claude-sonnet-4-20250514",
-      "description": "E2E testing with Playwright",
-      "tools": {
-        "playwright*": true
-      }
-    },
-
-    // Feedback codifier - the learning engine
     "feedback-codifier": {
       "model": "claude-opus-4-5-20251101",
       "temperature": 0.2,
@@ -233,13 +204,52 @@
         "context7*": true
       }
     },
-
-    // Code reviewer - comprehensive review with confidence scoring
     "reviewer": {
       "model": "claude-opus-4-5-20251101",
-      "description": "Multi-agent code review orchestrator",
+      "description": "Comprehensive code review with confidence scoring",
       "tools": {
         "context7*": true,
+        "shadcn*": true
+      }
+    },
+
+    // ┌─────────────────────────────────────────────────────────────┐
+    // │ MODEL CLASS: SONNET (balanced speed/quality)                │
+    // │ Current: claude-sonnet-4-20250514                           │
+    // └─────────────────────────────────────────────────────────────┘
+    "testing": {
+      "model": "claude-sonnet-4-20250514",
+      "description": "E2E testing with Playwright",
+      "tools": {
+        "playwright*": true
+      }
+    },
+    "reviewer-fast": {
+      "model": "claude-sonnet-4-20250514",
+      "description": "Quick code review for small changes",
+      "tools": {
+        "context7*": true,
+        "shadcn*": true
+      }
+    },
+
+    // ┌─────────────────────────────────────────────────────────────┐
+    // │ MODEL CLASS: HAIKU (fast, cheap, deterministic tasks)       │
+    // │ Current: claude-haiku-4-20250514                            │
+    // └─────────────────────────────────────────────────────────────┘
+    "runtime-validator": {
+      "model": "claude-haiku-4-20250514",
+      "description": "Workers runtime compatibility validator - catches forbidden APIs",
+      "tools": {}
+    },
+    "binding-analyzer": {
+      "model": "claude-haiku-4-20250514",
+      "description": "Analyzes wrangler.toml bindings and generates TypeScript interfaces"
+    },
+    "ui-validator": {
+      "model": "claude-haiku-4-20250514",
+      "description": "Validates shadcn/ui component usage",
+      "tools": {
         "shadcn*": true
       }
     }
