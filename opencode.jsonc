@@ -22,15 +22,24 @@
 
   // === Key Bindings ===
   // Quick access to common operations (press leader key first, then shortcut)
+  // Example: Ctrl+X then w = start work session
   "keybinds": {
     "leader": "ctrl+x",
+    // Session management
     "new_session": "n",
     "open_session": "o",
     "share": "s",
     "undo": "u",
     "redo": "r",
     "help": "h",
-    "quit": "q"
+    "quit": "q",
+    // Edge Stack workflows
+    "work": "w",           // /es-work - start feature development
+    "validate": "v",       // /es-validate - pre-commit checks
+    "code_review": "c",    // /es-review - code review
+    "tasks": "t",          // bd ready - check pending tasks
+    "find": "f",           // mgrep prompt - semantic search
+    "deploy": "d"          // /es-release - release workflow
   },
 
   // === Formatters ===
