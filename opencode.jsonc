@@ -77,6 +77,10 @@
     // Code review requests
     "review|PR|pull request|check this|what's wrong|look at": {
       "agent": "reviewer"
+    },
+    // Semantic code search - use mgrep for intent-based queries
+    "find.*where|search.*for|look.*for|how does.*work|what.*calls|who uses": {
+      "load": [".opencode/knowledge/mgrep-patterns.md"]
     }
   },
 

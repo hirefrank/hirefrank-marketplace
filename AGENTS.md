@@ -249,6 +249,15 @@ Hard Tools and MCP servers provide ground truth.
 | Release | `/es-release` |
 | Check upstream | `/es-upstream` |
 
+### Code Search
+
+| Search Type | Tool | Example |
+|-------------|------|---------|
+| Exact match | `grep` | `grep "TODO" src/` |
+| Semantic/intent | `mgrep` | `mgrep "error handling logic"` |
+
+Use mgrep for intent-based queries ("find rate limiting"), grep for exact patterns.
+
 | Agent | Purpose |
 |-------|---------|
 | @architect | High-level design decisions |
